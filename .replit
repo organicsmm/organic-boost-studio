@@ -1,0 +1,39 @@
+run = "npm run dev"
+modules = ["nodejs-20"]
+hidden = [".config", "package-lock.json"]
+entrypoint = "src/main.tsx"
+
+[nix]
+channel = "stable-24_05"
+
+[env]
+VITE_PORT = "5000"
+
+[deployment]
+deploymentTarget = "static"
+publicDir = "dist"
+build = ["npm", "run", "build"]
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 4173
+externalPort = 3000
+
+[workflows]
+runButton = "Dev"
+
+[[workflows.workflow]]
+name = "Dev"
+mode = "sequential"
+author = "lovable"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev -- --host 0.0.0.0 --port 5000"
